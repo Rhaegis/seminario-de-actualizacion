@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Unidad 1 - Ejercicio 9</title>
+</head>
+
+<body>
+
+    <h2>Sistema Gestión Usuarios y Almacenamiento</h2>
+
+    <div id="mainMenu">
+        <button onclick="mostrarLogin()">1. Iniciar sesión</button><br>
+        <button onclick="mostrarRegistro()">2. Crear cuenta</button>
+    </div>
+
+    <div id="loginSection" style="display:none;">
+        <h3>Iniciar sesión</h3>
+        <label>Usuario: <input type="text" id="loginUsuario"></label><br>
+        <label>Contraseña: <input type="password" id="loginContrasena"></label><br>
+        <button onclick="iniciarSesion()">Ingresar</button>
+        <button onclick="volverAlMenu()">Volver</button>
+    </div>
+
+    <div id="registroSection" style="display:none;">
+        <h3>Crear cuenta nueva</h3>
+        <label>Nuevo usuario: <input type="text" id="nuevoUsuario"></label><br>
+        <label>Nueva contraseña: <input type="password" id="nuevaContrasena"></label><br>
+        <button onclick="crearCuenta()">Registrar</button>
+        <button onclick="volverAlMenu()">Volver</button>
+    </div>
+
+    <div id="usuarioMenu" style="display:none;">
+        <h3>Menú Usuario - Artículos de limpieza</h3>
+        <p>Bienvenido/a <span id="usuarioActivo"></span></p>
+        <button onclick="listarArticulos()">1. Listar artículos</button><br>
+        <button onclick="mostrarNuevoArticulo()">2. Nuevo artículo</button><br>
+        <button onclick="mostrarEditarArticulo()">3. Editar artículo</button><br>
+        <button onclick="mostrarEliminarArticulo()">4. Eliminar artículo</button><br>
+        <button onclick="mostrarComprarArticulo()">5. Comprar articulo</button><br>
+        <button onclick="mostrarCambioContrasena()">Cambiar contraseña</button><br>
+        <button onclick="cerrarSesion()">Cerrar sesión</button>
+    </div>
+
+    <!-- Sección para cambiar contraseña -->
+    <div id="cambiarContrasenaSection" style="display:none;">
+        <h3>Cambiar contraseña</h3>
+        <label>Contraseña actual: <input type="password" id="contrasenaActual"></label><br>
+        <label>Nueva contraseña: <input type="password" id="nuevaContrasenaCambio"></label><br>
+        <button onclick="cambiarContrasena()">Guardar</button>
+        <button onclick="volverAlMenuUsuario()">Volver</button>
+    </div>
+
+    <!-- Sección Listar Artículos -->
+    <div id="listarArticulosSection" style="display:none;">
+        <h3>Lista de artículos de limpieza</h3>
+        <div id="listaArticulos"></div>
+        <button onclick="volverAlMenuUsuario()">Volver</button>
+    </div>
+
+    <!-- Sección Nuevo Artículo -->
+    <div id="nuevoArticuloSection" style="display:none;">
+        <h3>Nuevo artículo</h3>
+        <label>Id: <input type="number" id="nuevoId" min="1"></label><br>
+        <label>Nombre: <input type="text" id="nuevoNombre"></label><br>
+        <label>Precio: <input type="number" id="nuevoPrecio" min="0" step="0.01"></label><br>
+        <label>Stock: <input type="number" id="nuevoStock" min="0"></label><br>
+        <button onclick="agregarArticulo()">Agregar</button>
+        <button onclick="volverAlMenuUsuario()">Volver</button>
+    </div>
+
+    <!-- Sección Editar Artículo -->
+    <div id="editarArticuloSection" style="display:none;">
+        <h3>Editar artículo</h3>
+        <label>Ingrese el Id del artículo a editar: <input type="number" id="editarIdBuscado" min="1"></label>
+        <button onclick="buscarArticuloParaEditar()">Buscar</button>
+        <button onclick="volverAlMenuUsuario()">Volver</button>
+        <br><br>
+        <div id="formEditarArticulo" style="display:none;">
+            <label>Nombre: <input type="text" id="editarNombre"></label><br>
+            <label>Precio: <input type="number" id="editarPrecio" min="0" step="0.01"></label><br>
+            <label>Stock: <input type="number" id="editarStock" min="0"></label><br>
+            <button onclick="guardarArticuloEditado()">Guardar Cambios</button>
+        </div>
+    </div>
+
+    <!-- Sección Eliminar Artículo -->
+    <div id="eliminarArticuloSection" style="display:none;">
+        <h3>Eliminar artículo</h3>
+        <label>Ingrese el Id del artículo a eliminar: <input type="number" id="eliminarId" min="1"></label><br>
+        <button onclick="eliminarArticulo()">Eliminar</button>
+        <button onclick="volverAlMenuUsuario()">Volver</button>
+    </div>
+
+    <!-- Seccion Comprar Articulo-->
+    <div id="comprarArticuloSection" style="display:none;">
+        <h2>Comprar artículo</h2>
+        <label for="comprarId">Id del artículo:</label>
+        <input type="number" id="comprarId" min="1"><br>
+        <label for="comprarCantidad">Cantidad a comprar:</label>
+        <input type="number" id="comprarCantidad" min="1"><br>
+        <button onclick="comprarArticulo()">Comprar</button>
+        <button onclick="mostrarMenuUsuario()">Volver</button>
+    </div>
+
+    <script>
+        // Usuarios existentes
+        const usuarios = {
+            "admin1": { password: "Admin#123!", categoria: "Administrador" },
+            "cliente123": { password: "Limpiez@_456", categoria: "Cliente" },
+            "vendedor01": { password: "Vend3dor$!", categoria: "Vendedor" },
+            "deposito1": { password: "Dep0sito##12", categoria: "Trabajador de depósito" }
+        };
+
+        //Permisos por categoria
+        const permisosPorCategoria = {
+            "Administrador": ["listar", "agregar", "editar", "eliminar", "comprar", "cambiar_contrasena"],
+            "Cliente": ["listar", "comprar", "cambiar_contrasena"],
+            "Vendedor": ["listar", "editar", "comprar", "cambiar_contrasena"],
+            "Trabajador de depósito": ["listar", "agregar", "editar", "cambiar_contrasena"]
+        };
+
+
+        // Artículos almacenados
+        let articulos = [
+            { id: 1, nombre: "Lavandina x 1L", precio: 875.25, stock: 3000 },
+            { id: 4, nombre: "Detergente x 500mL", precio: 1102.45, stock: 2010 },
+            { id: 22, nombre: "Jabón en polvo x 250g", precio: 650.22, stock: 407 }
+        ];
+
+        let usuarioActivo = null;
+        let categoriaActiva = null;
+        let intentosFallidos = 0;
+        let usuarioBloqueado = false;
+
+        // Funciones navegación
+        function ocultarTodasSecciones() {
+            document.getElementById("mainMenu").style.display = "none";
+            document.getElementById("loginSection").style.display = "none";
+            document.getElementById("registroSection").style.display = "none";
+            document.getElementById("usuarioMenu").style.display = "none";
+            document.getElementById("cambiarContrasenaSection").style.display = "none";
+            document.getElementById("listarArticulosSection").style.display = "none";
+            document.getElementById("nuevoArticuloSection").style.display = "none";
+            document.getElementById("editarArticuloSection").style.display = "none";
+            document.getElementById("eliminarArticuloSection").style.display = "none";
+            document.getElementById("formEditarArticulo").style.display = "none";
+            document.getElementById("comprarArticuloSection").style.display = "none";
+        }
+
+        function mostrarLogin() {
+            ocultarTodasSecciones();
+            document.getElementById("loginSection").style.display = "block";
+        }
+
+        function mostrarRegistro() {
+            ocultarTodasSecciones();
+            document.getElementById("registroSection").style.display = "block";
+        }
+
+        function volverAlMenu() {
+            ocultarTodasSecciones();
+            document.getElementById("mainMenu").style.display = "block";
+        }
+
+        function mostrarMenuUsuario() {
+            ocultarTodasSecciones();
+            document.getElementById("usuarioActivo").textContent = `${usuarioActivo} (${categoriaActiva})`;
+
+            const botones = document.querySelectorAll("#usuarioMenu button");
+            botones.forEach(btn => btn.style.display = "inline-block");
+
+            const permisos = permisosPorCategoria[categoriaActiva];
+
+            const botonesAcciones = {
+                "1. Listar artículos": "listar",
+                "2. Nuevo artículo": "agregar",
+                "3. Editar artículo": "editar",
+                "4. Eliminar artículo": "eliminar",
+                "5. Comprar articulo": "comprar",
+                "Cambiar contraseña": "cambiar_contrasena"
+            };
+
+            botones.forEach(btn => {
+                const accion = botonesAcciones[btn.textContent.trim()];
+                if (accion && !permisos.includes(accion)) {
+                    btn.style.display = "none";
+                }
+            });
+
+            document.getElementById("usuarioMenu").style.display = "block";
+        }
+
+        function volverAlMenuUsuario() {
+            mostrarMenuUsuario();
+        }
+
+        // Login y registro
+        function iniciarSesion() {
+            if (usuarioBloqueado) {
+                alert("Usuario bloqueado. Contacte al administrador");
+                return;
+            }
+
+            const user = document.getElementById("loginUsuario").value.trim();
+            const pass = document.getElementById("loginContrasena").value;
+
+            if (usuarios[user] && usuarios[user].password === pass) {
+                alert("¡Bienvenido/a " + user + "!");
+                intentosFallidos = 0;
+                usuarioActivo = user;
+                categoriaActiva = usuarios[user].categoria;
+                mostrarMenuUsuario();
+            } else {
+                intentosFallidos++;
+                if (intentosFallidos >= 3) {
+                    usuarioBloqueado = true;
+                    alert("Usuario bloqueado. Contacte al administrador");
+                } else {
+                    alert("Usuario y/o contraseña incorrecta");
+                }
+            }
+        }
+
+        function crearCuenta() {
+            const user = document.getElementById("nuevoUsuario").value.trim();
+            const pass = document.getElementById("nuevaContrasena").value;
+
+            if (!user) {
+                alert("El usuario no puede estar vacío.");
+                return;
+            }
+
+            if (usuarios[user]) {
+                alert("El usuario ya existe.");
+                return;
+            }
+
+            if (!validarContrasena(pass)) {
+                alert("La contraseña debe tener entre 8 y 16 caracteres alfanuméricos, al menos una mayúscula y al menos 2 símbolos especiales.");
+                return;
+            }
+
+            usuarios[user] = pass;
+            alert("Cuenta creada con éxito.");
+            volverAlMenu();
+        }
+
+        function validarContrasena(pass) {
+            const largoValido = pass.length >= 8 && pass.length <= 16;
+            const tieneMayuscula = /[A-Z]/.test(pass);
+            const simbolosEspeciales = pass.match(/[^a-zA-Z0-9]/g);
+            const tieneDosSimbolos = simbolosEspeciales && simbolosEspeciales.length >= 2;
+
+            return largoValido && tieneMayuscula && tieneDosSimbolos;
+        }
+
+        // Cambiar contraseña
+        function mostrarCambioContrasena() {
+            ocultarTodasSecciones();
+            document.getElementById("contrasenaActual").value = "";
+            document.getElementById("nuevaContrasenaCambio").value = "";
+            document.getElementById("cambiarContrasenaSection").style.display = "block";
+        }
+
+        function cambiarContrasena() {
+            const actual = document.getElementById("contrasenaActual").value;
+            const nueva = document.getElementById("nuevaContrasenaCambio").value;
+
+            if (usuarios[usuarioActivo] !== actual) {
+                alert("Contraseña actual incorrecta.");
+                return;
+            }
+
+            if (!validarContrasena(nueva)) {
+                alert("La nueva contraseña debe tener entre 8 y 16 caracteres alfanuméricos, al menos una mayúscula y al menos 2 símbolos especiales.");
+                return;
+            }
+
+            usuarios[usuarioActivo].password = nueva;
+            alert("Contraseña cambiada con éxito.");
+            mostrarMenuUsuario();
+        }
+
+        // Cerrar sesión
+        function cerrarSesion() {
+            usuarioActivo = null;
+            intentosFallidos = 0;
+            usuarioBloqueado = false;
+            alert("Sesión cerrada.");
+            volverAlMenu();
+        }
+
+        // CRUD Artículos
+
+        // 1. Listar artículos
+        function listarArticulos() {
+            ocultarTodasSecciones();
+            let contenido = "<table border='1' cellpadding='5' cellspacing='0'>";
+            contenido += "<tr><th>Id</th><th>Nombre</th><th>Precio</th><th>Stock</th></tr>";
+
+            articulos.forEach(art => {
+                contenido += `<tr>
+                    <td>${art.id}</td>
+                    <td>${art.nombre}</td>
+                    <td>$${art.precio.toFixed(2)}</td>
+                    <td>${art.stock}</td>
+                </tr>`;
+            });
+
+            contenido += "</table>";
+
+            document.getElementById("listaArticulos").innerHTML = contenido;
+            document.getElementById("listarArticulosSection").style.display = "block";
+        }
+
+        // 2. Nuevo artículo
+
+        function mostrarNuevoArticulo() {
+            ocultarTodasSecciones();
+            document.getElementById("nuevoId").value = "";
+            document.getElementById("nuevoNombre").value = "";
+            document.getElementById("nuevoPrecio").value = "";
+            document.getElementById("nuevoStock").value = "";
+            document.getElementById("nuevoArticuloSection").style.display = "block";
+        }
+        function agregarArticulo() {
+
+            const id = Number(document.getElementById("nuevoId").value);
+            const nombre = document.getElementById("nuevoNombre").value.trim();
+            const precio = Number(document.getElementById("nuevoPrecio").value);
+            const stock = Number(document.getElementById("nuevoStock").value);
+
+            if (!id || !nombre || isNaN(precio) || isNaN(stock)) {
+                alert("Complete todos los campos correctamente.");
+                return;
+            }
+
+            if (precio < 0 || stock < 0) {
+                alert("Precio y stock deben ser números positivos.");
+                return;
+            }
+
+            if (articulos.find(art => art.id === id)) {
+                alert("Ya existe un artículo con ese Id.");
+                return;
+            }
+
+            if (!permisosPorCategoria[categoriaActiva].includes("agregar")) {
+                alert("No tiene permiso para agregar artículos.");
+                mostrarMenuUsuario();
+                return;
+            }
+
+            articulos.push({ id, nombre, precio, stock });
+            alert("Artículo agregado correctamente.");
+            mostrarMenuUsuario();
+        }
+
+        // 3. Editar artículo
+        function mostrarEditarArticulo() {
+            ocultarTodasSecciones();
+            document.getElementById("editarIdBuscado").value = "";
+            document.getElementById("formEditarArticulo").style.display = "none";
+            document.getElementById("editarArticuloSection").style.display = "block";
+        }
+
+        let articuloEditando = null;
+
+        function buscarArticuloParaEditar() {
+            const idBuscar = Number(document.getElementById("editarIdBuscado").value);
+            if (!idBuscar) {
+                alert("Ingrese un Id válido.");
+                return;
+            }
+
+            const articulo = articulos.find(art => art.id === idBuscar);
+            if (!articulo) {
+                alert("No se encontró artículo con ese Id.");
+                return;
+            }
+
+            articuloEditando = articulo;
+            document.getElementById("editarNombre").value = articulo.nombre;
+            document.getElementById("editarPrecio").value = articulo.precio;
+            document.getElementById("editarStock").value = articulo.stock;
+
+            document.getElementById("formEditarArticulo").style.display = "block";
+        }
+
+        function guardarArticuloEditado() {
+            if (!articuloEditando) {
+                alert("No hay artículo seleccionado para editar.");
+                return;
+            }
+
+            const nuevoNombre = document.getElementById("editarNombre").value.trim();
+            const nuevoPrecio = Number(document.getElementById("editarPrecio").value);
+            const nuevoStock = Number(document.getElementById("editarStock").value);
+
+            if (!nuevoNombre || isNaN(nuevoPrecio) || isNaN(nuevoStock)) {
+                alert("Complete todos los campos correctamente.");
+                return;
+            }
+
+            if (nuevoPrecio < 0 || nuevoStock < 0) {
+                alert("Precio y stock deben ser números positivos.");
+                return;
+            }
+
+            articuloEditando.nombre = nuevoNombre;
+            articuloEditando.precio = nuevoPrecio;
+            articuloEditando.stock = nuevoStock;
+
+            alert("Artículo actualizado correctamente.");
+            articuloEditando = null;
+            mostrarMenuUsuario();
+        }
+
+        // 4. Eliminar artículo
+        function mostrarEliminarArticulo() {
+            ocultarTodasSecciones();
+            document.getElementById("eliminarId").value = "";
+            document.getElementById("eliminarArticuloSection").style.display = "block";
+        }
+
+        function eliminarArticulo() {
+            const idEliminar = Number(document.getElementById("eliminarId").value);
+            if (!idEliminar) {
+                alert("Ingrese un Id válido.");
+                return;
+            }
+
+            const index = articulos.findIndex(art => art.id === idEliminar);
+            if (index === -1) {
+                alert("No se encontró artículo con ese Id.");
+                return;
+            }
+
+            if (!confirm(`¿Está seguro que desea eliminar el artículo con Id ${idEliminar}?`)) {
+                return;
+            }
+
+            articulos.splice(index, 1);
+            alert("Artículo eliminado correctamente.");
+            mostrarMenuUsuario();
+        }
+        // 5. Comprar artículo
+        function mostrarComprarArticulo() {
+            ocultarTodasSecciones();
+            document.getElementById("comprarId").value = "";
+            document.getElementById("comprarCantidad").value = "";
+            document.getElementById("comprarArticuloSection").style.display = "block";
+        }
+
+        function comprarArticulo() {
+            const idComprar = Number(document.getElementById("comprarId").value);
+            const cantidadComprar = Number(document.getElementById("comprarCantidad").value);
+
+            if (!idComprar || isNaN(cantidadComprar) || cantidadComprar <= 0) {
+                alert("Ingrese un Id válido y una cantidad positiva.");
+                return;
+            }
+
+            const articulo = articulos.find(art => art.id === idComprar);
+            if (!articulo) {
+                alert("No se encontró artículo con ese Id.");
+                return;
+            }
+
+            if (articulo.stock <= 0) {
+                alert("El artículo está sin stock.");
+                return;
+            }
+
+            if (cantidadComprar > articulo.stock) {
+                alert(`No hay suficiente stock. Stock disponible: ${articulo.stock}`);
+                return;
+            }
+
+            if (!confirm(`Confirma la compra de ${cantidadComprar} unidad(es) del artículo "${articulo.nombre}"?`)) {
+                return;
+            }
+
+            articulo.stock -= cantidadComprar;
+            alert(`Compra realizada correctamente. Stock restante: ${articulo.stock}`);
+            mostrarMenuUsuario();
+        }
+
+
+    </script>
+</body>
+
+</html>

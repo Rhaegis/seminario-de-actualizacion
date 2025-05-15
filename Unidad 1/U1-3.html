@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Unidad 1 - Ejercicio 3</title>
+</head>
+
+<body>
+    <h2>Inicio de sesión</h2>
+    <form id="loginForm">
+        <label for="usuario">Usuario:</label>
+        <input type="text" id="usuario" required><br><br>
+
+        <label for="contraseña">Contraseña:</label>
+        <input type="password" id="contraseña" required><br><br>
+
+        <button type="submit">Ingresar</button>
+    </form>
+
+    <script>
+        let usuarioValido = "cliente123";
+        let contraseñaValida = "Limpieza_456";
+        let intentos = 0;
+
+        function validarContraseña(segura) {
+            const tieneLongitudCorrecta = segura.length >= 8 && segura.length <= 16;
+            const tieneMayuscula = /[A-Z]/.test(segura);
+            const simbolos = segura.replace(/[A-Za-z0-9]/g, '');
+            const tieneDosSimbolos = simbolos.length >= 2;
+
+            return tieneLongitudCorrecta && tieneMayuscula && tieneDosSimbolos;
+        }
+
+        function mostrarMenu() {
+            let opcion;
+            do {
+                opcion = prompt(`Menú de acciones:\n1. Cambiar contraseña\n2. Salir`);
+                if (opcion === "1") {
+                    const nuevaPass = prompt("Ingrese la nueva contraseña (8-16 caracteres, 1 mayúscula, 2 símbolos):");
+                    if (nuevaPass) {
+                        if (validarContraseña(nuevaPass)) {
+                            contraseñaValida = nuevaPass;
+                            alert("Contraseña actualizada correctamente.");
+                        } else {
+                            alert("La contraseña no cumple con los requisitos de seguridad.");
+                        }
+                    } else {
+                        alert("No se actualizo la contraseña.");
+                    }
+                }
+            } while (opcion !== "2");
+
+            alert("Sesión finalizada. Vuelva a iniciar sesión.");
+        }
+
+        document.getElementById("loginForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const usuario = document.getElementById("usuario").value;
+            const contraseña = document.getElementById("contraseña").value;
+
+            if (usuario === usuarioValido && contraseña === contraseñaValida) {
+                alert(`¡Bienvenido/a ${usuario}!`);
+                this.reset();
+                intentos = 0;
+                mostrarMenu();
+            } else {
+                intentos++;
+                if (intentos >= 3) {
+                    alert("Usuario bloqueado. Contacte al administrador.");
+                    this.querySelector("button").disabled = true;
+                } else {
+                    alert("Usuario y/o contraseña incorrecta.");
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
