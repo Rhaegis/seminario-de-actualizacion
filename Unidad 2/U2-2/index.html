@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Unidad 1 - Ejercicio 10</title>
+</head>
+
+<body>
+    <h2>Sistema Gestión Usuarios y Almacenamiento</h2>
+
+    <div id="mainMenu">
+        <button onclick="appUI.mostrarLogin()">1. Iniciar sesión</button>
+    </div>
+
+    <div id="loginSection" style="display:none;">
+        <h3>Iniciar sesión</h3>
+        <label>Usuario: <input type="text" id="loginUsuario"></label><br>
+        <label>Contraseña: <input type="password" id="loginContrasena"></label><br>
+        <button onclick="appUI.iniciarSesion()">Ingresar</button>
+        <button onclick="appUI.volverAlMenu()">Volver</button>
+    </div>
+
+    <!-- (secciones de registro, menú usuario, artículos, etc., igual que ya tenías en tu código) -->
+
+    <div id="listarArticulosSection" style="display:none;">
+        <h3>Lista de artículos de limpieza</h3>
+        <div id="listaArticulos"></div>
+        <button onclick="appUI.volverAlMenuUsuario()">Volver</button>
+    </div>
+
+    <!-- Scripts -->
+    <!-- aquí cambias el ApplicationModel según el caso que quieras probar -->
+    <script src="ApplicationModel-WebStorage.js"></script>
+    <!-- <script src="ApplicationModel-Cookies.js"></script> -->
+    <!-- <script src="ApplicationModel-IndexedDB.js"></script> -->
+    <script src="ApplicationUI.js"></script>
+    <script>
+        const appModel = new ApplicationModel(); // según el archivo incluido
+        const appUI = new ApplicationUI(appModel);
+    </script>
+</body>
+
+</html>

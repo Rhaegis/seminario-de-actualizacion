@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Unidad 1 - Ejercicio 10</title>
+</head>
+
+<body>
+    <h2>Sistema Gestión Usuarios y Almacenamiento</h2>
+
+    <div id="mainMenu">
+        <button onclick="App.mostrarLogin()">1. Iniciar sesión</button>
+    </div>
+
+    <div id="loginSection" style="display:none;">
+        <h3>Iniciar sesión</h3>
+        <label>Usuario: <input type="text" id="loginUsuario"></label><br>
+        <label>Contraseña: <input type="password" id="loginContrasena"></label><br>
+        <button onclick="App.iniciarSesion()">Ingresar</button>
+        <button onclick="App.volverAlMenu()">Volver</button>
+    </div>
+
+    <div id="registroSection" style="display:none;">
+        <h3>Crear cuenta nueva</h3>
+        <label>Nuevo usuario: <input type="text" id="nuevoUsuario"></label><br>
+        <label>Nueva contraseña: <input type="password" id="nuevaContrasena"></label><br>
+        <button onclick="App.crearCuenta()">Registrar</button>
+        <button onclick="App.volverAlMenu()">Volver</button>
+    </div>
+
+    <div id="usuarioMenu" style="display:none;">
+        <h3>Menú Usuario - Artículos de limpieza</h3>
+        <p>Bienvenido/a <span id="usuarioActivo"></span></p>
+        <button onclick="App.listarArticulos()">1. Listar artículos</button><br>
+        <button onclick="App.mostrarNuevoArticulo()">2. Nuevo artículo</button><br>
+        <button onclick="App.mostrarEditarArticulo()">3. Editar artículo</button><br>
+        <button onclick="App.mostrarEliminarArticulo()">4. Eliminar artículo</button><br>
+        <button onclick="App.mostrarComprarArticulo()">5. Comprar articulo</button><br>
+        <button onclick="App.mostrarCambioContrasena()">Cambiar contraseña</button><br>
+        <button onclick="App.cerrarSesion()">Cerrar sesión</button><br>
+        <button id="btnCrearCuentaAdmin" onclick="App.mostrarRegistro()" style="display:none;">Crear cuenta
+            nueva</button>
+    </div>
+
+    <!-- Secciones auxiliares (iguales a tu código original) -->
+    <div id="cambiarContrasenaSection" style="display:none;">
+        <h3>Cambiar contraseña</h3>
+        <label>Contraseña actual: <input type="password" id="contrasenaActual"></label><br>
+        <label>Nueva contraseña: <input type="password" id="nuevaContrasenaCambio"></label><br>
+        <button onclick="App.cambiarContrasena()">Guardar</button>
+        <button onclick="App.volverAlMenuUsuario()">Volver</button>
+    </div>
+
+    <div id="listarArticulosSection" style="display:none;">
+        <h3>Lista de artículos de limpieza</h3>
+        <div id="listaArticulos"></div>
+        <button onclick="App.volverAlMenuUsuario()">Volver</button>
+    </div>
+
+    <div id="nuevoArticuloSection" style="display:none;">
+        <h3>Nuevo artículo</h3>
+        <label>Id: <input type="number" id="nuevoId" min="1"></label><br>
+        <label>Nombre: <input type="text" id="nuevoNombre"></label><br>
+        <label>Precio: <input type="number" id="nuevoPrecio" min="0" step="0.01"></label><br>
+        <label>Stock: <input type="number" id="nuevoStock" min="0"></label><br>
+        <button onclick="App.agregarArticulo()">Agregar</button>
+        <button onclick="App.volverAlMenuUsuario()">Volver</button>
+    </div>
+
+    <div id="editarArticuloSection" style="display:none;">
+        <h3>Editar artículo</h3>
+        <label>Ingrese el Id del artículo a editar: <input type="number" id="editarIdBuscado" min="1"></label>
+        <button onclick="App.buscarArticuloParaEditar()">Buscar</button>
+        <button onclick="App.volverAlMenuUsuario()">Volver</button>
+        <br><br>
+        <div id="formEditarArticulo" style="display:none;">
+            <label>Nombre: <input type="text" id="editarNombre"></label><br>
+            <label>Precio: <input type="number" id="editarPrecio" min="0" step="0.01"></label><br>
+            <label>Stock: <input type="number" id="editarStock" min="0"></label><br>
+            <button onclick="App.guardarArticuloEditado()">Guardar Cambios</button>
+        </div>
+    </div>
+
+    <div id="eliminarArticuloSection" style="display:none;">
+        <h3>Eliminar artículo</h3>
+        <label>Ingrese el Id del artículo a eliminar: <input type="number" id="eliminarId" min="1"></label><br>
+        <button onclick="App.eliminarArticulo()">Eliminar</button>
+        <button onclick="App.volverAlMenuUsuario()">Volver</button>
+    </div>
+
+    <div id="comprarArticuloSection" style="display:none;">
+        <h2>Comprar artículo</h2>
+        <label for="comprarId">Id del artículo:</label>
+        <input type="number" id="comprarId" min="1"><br>
+        <label for="comprarCantidad">Cantidad a comprar:</label>
+        <input type="number" id="comprarCantidad" min="1"><br>
+        <button onclick="App.comprarArticulo()">Comprar</button>
+        <button onclick="App.volverAlMenuUsuario()">Volver</button>
+    </div>
+
+    <!-- Scripts -->
+    <script src="Backend.js"></script>
+    <script src="Frontend.js"></script>
+    <script src="Application.js"></script>
+</body>
+
+</html>
