@@ -1,0 +1,91 @@
+D
+ListFiles
+Endpoint: /IFileStorage/ListFiles
+Formato: JSON
+Cabecera entrada: -
+Cabecera salida: -
+Método HTTP: GET
+Estructura IN:
+{
+  "directory": "/home/user/files"
+}
+Estructura OUT:
+[
+  "invoice.pdf",
+  "todo.txt",
+  "photo.jpg"
+]
+Estructura de datos ERR:
+{
+  "type": "error",
+  "description": "No se encontró el directorio: /home/user/files"
+}
+
+
+
+ReadFile
+Endpoint: /IFileStorage/ReadFile
+Formato: JSON
+Cabecera entrada: -
+Cabecera salida: -
+Método HTTP: GET
+Estructura IN:
+{
+  "path": "/home/user/files/todo.txt"
+}
+Estructura OUT:
+{
+  "content": "Contenido de ejemplo del archivo solicitado."
+}
+Estructura de datos ERR:
+{
+  "type": "error",
+  "description": "Permiso denegado para leer: /home/user/files/todo.txt"
+}
+
+
+
+WriteFile
+Endpoint: /IFileStorage/WriteFile
+Formato: JSON
+Cabecera entrada: -
+Cabecera salida: -
+Método HTTP: PUT
+Estructura IN:
+{
+  "path": "/home/user/files/new_document.txt",
+  "content": "Texto de ejemplo para crear un nuevo archivo."
+}
+Estructura OUT:
+{
+  "type": "success",
+  "description": "Archivo escrito correctamente."
+}
+Estructura de datos ERR:
+{
+  "type": "error",
+  "description": "No se pudo escribir en: /home/user/files/new_document.txt"
+}
+
+
+
+DeleteFile
+Endpoint: /IFileStorage/DeleteFile
+Formato: JSON
+Cabecera entrada: -
+Cabecera salida: -
+Método HTTP: DELETE
+Estructura IN:
+{
+  "path": "/home/user/files/invoice.pdf"
+}
+Estructura OUT:
+{
+  "type": "success",
+  "description": "Archivo eliminado exitosamente."
+}
+Estructura de datos ERR:
+{
+  "type": "error",
+  "description": "Archivo no encontrado: /home/user/files/invoice.pdf"
+}

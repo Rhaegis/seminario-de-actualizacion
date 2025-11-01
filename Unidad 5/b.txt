@@ -1,0 +1,72 @@
+B
+SearchProducts
+
+Endpoint: /IProductCatalog/SearchProducts
+Formato: JSON
+Cabecera entrada: -
+Cabecera salida: -
+Método HTTP: GET
+Estructura IN:
+{
+"keyword": "product sample"
+}
+Estructura OUT:
+{
+"id": 12,
+"name": "Sample Item",
+"price": "120.50"
+}
+Estructura de datos ERR:
+{
+"type": "error",
+"description": "No se encontraron resultados para la búsqueda."
+}
+
+
+
+GetProductById
+
+Endpoint: /IProductCatalog/GetProductById
+Formato: JSON
+Cabecera entrada: -
+Cabecera salida: -
+Método HTTP: GET
+Estructura IN:
+{
+"id": 4
+}
+Estructura OUT:
+{
+"id": 4,
+"name": "Sample Product",
+"price": "99.90"
+}
+Estructura de datos ERR:
+{
+"type": "error",
+"description": "Producto no encontrado."
+}
+
+
+
+UpdateStock
+
+Endpoint: /IProductCatalog/UpdateStock
+Formato: JSON
+Cabecera entrada: -
+Cabecera salida: -
+Método HTTP: PUT
+Estructura IN:
+{
+"productId": 4,
+"newStock": 25
+}
+Estructura OUT:
+{
+"status": true
+}
+Estructura de datos ERR:
+{
+"type": "error",
+"description": "No fue posible actualizar el stock del producto."
+}

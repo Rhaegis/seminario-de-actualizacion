@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actividad 1 - XMLHttpRequest</title>
+    <style>
+        .contenedor {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            gap: 10px;
+            margin-top: 40px;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #0078d7;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #005fa3;
+        }
+
+        textarea {
+            width: 90%;
+            height: 200px;
+            font-family: monospace;
+            font-size: 14px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            background-color: #f9f9f9;
+            resize: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <solicitud-component></solicitud-component>
+
+    <script>
+        class SolicitudComponent extends HTMLElement {
+            constructor() {
+                super();
+                this.attachShadow({ mode: 'open' });
+
+                this.shadowRoot.innerHTML = `
+          <div class="contenedor">
+            <h2>Actividad 1 - XMLHttpRequest</h2>
+            <button id="btnSolicitud">Efectuar Solicitud</button>
+            <textarea id="resultado" readonly placeholder="La respuesta aparecerá aquí..."></textarea>
+          </div>
+        `;
+            }
+
+            connectedCallback() {
+                const boton = this.shadowRoot.querySelector('#btnSolicitud');
+                const area = this.shadowRoot.querySelector('#resultado');
+
+                boton.addEventListener('click', () => {
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('GET', 'https://jsonplaceholder.typicode.com/posts/1');
+                    xhr.onload = function () {
+                        if (xhr.status === 200) {
+                            const respuesta = JSON.parse(xhr.responseText);
+                            area.value = JSON.stringify(respuesta, null, 2);
+                        } else {
+                            area.value = `Error: ${xhr.status}`;
+                        }
+                    };
+                    xhr.onerror = function () {
+                        area.value = 'Error de conexión.';
+                    };
+                    xhr.send();
+                });
+            }
+        }
+
+        customElements.define('solicitud-component', SolicitudComponent);
+    </script>
+
+</body>
+
+</html>

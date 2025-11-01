@@ -1,0 +1,49 @@
+A
+Endpoint: /IUserService/GetAllUsers
+Método HTTP: GET
+Formato Serialización: JSON
+Cabecera entrada: -
+Cabecera salida: -
+Estructura de datos IN: -
+Estructura de datos OUT:
+[
+{
+"id": 1,
+"name": "John Doe",
+"email": "john.doe@example.com"
+},
+{
+"id": 2,
+"name": "Jane Smith",
+"email": "jane.smith@example.com"
+}
+]
+
+Estructura de datos ERR:
+{
+"type": "error",
+"description": "No fue posible obtener la lista de usuarios."
+}
+
+
+
+Endpoint: /IUserService/GetUserById
+Método HTTP: GET
+Formato Serialización: JSON
+Cabecera entrada: -
+Cabecera salida: -
+Estructura de datos IN:
+{
+"id": 5
+}
+Estructura de datos OUT:
+{
+"id": 5,
+"name": "María González",
+"email": "maria.gonzalez@example.com"
+}
+Estructura de datos ERR:
+{
+"type": "error",
+"description": "El usuario solicitado no existe."
+}

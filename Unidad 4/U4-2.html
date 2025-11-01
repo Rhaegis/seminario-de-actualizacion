@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Actividad 2 - Fetch API</title>
+  <style>
+    .contenedor {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      gap: 10px;
+      margin-top: 40px;
+    }
+
+    h2 {
+      color: #333;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #1e7e34;
+    }
+
+    textarea {
+      width: 90%;
+      height: 200px;
+      font-family: monospace;
+      font-size: 14px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background-color: #f9f9f9;
+      resize: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <solicitud-fetch></solicitud-fetch>
+
+  <script>
+    class SolicitudFetch extends HTMLElement {
+      constructor() {
+        super();
+        this.attachShadow({ mode: 'open' });
+
+        this.shadowRoot.innerHTML = `
+          <div class="contenedor">
+            <h2>Actividad 2 - Fetch API</h2>
+            <button id="btnFetch">Efectuar Solicitud</button>
+            <textarea id="resultado" readonly placeholder="La respuesta aparecerá aquí..."></textarea>
+          </div>
+        `;
+      }
+
+      connectedCallback() {
+        const boton = this.shadowRoot.querySelector('#btnFetch');
+        const area = this.shadowRoot.querySelector('#resultado');
+
+        boton.addEventListener('click', async () => {
+          try {
+            const respuesta = await fetch('https://jsonplaceholder.typicode.com/posts/1');
+            if (!respuesta.ok) throw new Error(`Error HTTP: ${respuesta.status}`);
+
+            const datos = await respuesta.json();
+            area.value = JSON.stringify(datos, null, 2);
+          } catch (error) {
+            area.value = `Ocurrió un error: ${error.message}`;
+          }
+        });
+      }
+    }
+
+    customElements.define('solicitud-fetch', SolicitudFetch);
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,76 @@
+C
+TrackEvent
+Endpoint: /IAnalyticsService/TrackEvent
+Formato: JSON
+Cabecera entrada: -
+Cabecera salida: -
+Método HTTP: POST
+Estructura IN:
+{
+  "eventName": "UserSignIn",
+  "properties": {
+    "userId": "456",
+    "device": "desktop",
+    "region": "Argentina"
+  }
+}
+Estructura OUT:
+{
+  "status": true
+}
+Estructura de datos ERR:
+{
+  "type": "error",
+  "description": "No se pudo registrar el evento."
+}
+
+
+
+GetEventCount
+Endpoint: /IAnalyticsService/GetEventCount
+Formato: JSON
+Cabecera entrada: -
+Cabecera salida: -
+Método HTTP: GET
+Estructura IN:
+{
+  "eventName": "UserSignIn"
+}
+Estructura OUT:
+{
+  "eventName": "UserSignIn",
+  "count": 275
+}
+Estructura de datos ERR:
+{
+  "type": "error",
+  "description": "Evento no encontrado."
+}
+
+
+
+GetTopEvents
+Endpoint: /IAnalyticsService/GetTopEvents
+Formato: JSON
+Cabecera entrada: -
+Cabecera salida: -
+Método HTTP: GET
+Estructura IN:
+{
+  "limit": 5
+}
+Estructura OUT:
+{
+  "topEvents": {
+    "UserSignIn": 275,
+    "AddToCart": 195,
+    "Checkout": 140,
+    "Logout": 85,
+    "ViewItem": 70
+  }
+}
+Estructura de datos ERR:
+{
+  "type": "error",
+  "description": "No se encontraron eventos registrados."
+}

@@ -1,0 +1,58 @@
+E
+Endpoint: /IAuthService/Login
+Método HTTP: Post
+Formato Serializacion: JSON
+Cabecera entrada: -
+Cabecera salida: Token
+Estructura de datos IN:
+{
+"user": "exampleUser",
+"password": "examplePass"
+}
+Estructura de datos OUT:
+{
+"token": "abc123xyz"
+}
+Estructura de datos ERR:
+{
+"type": "error",
+"description": "Invalid credentials"
+}
+
+Endpoint: /IAuthService/Logout
+Método HTTP: Post
+Formato Serializacion: JSON
+Cabecera entrada: Token de autentcacion
+Cabecera salida: -
+Estructura de datos IN:
+{
+"token": "abc123xyz"
+}
+Estructura de datos OUT:
+{
+"success": true
+}
+Estructura de datos ERR:
+{
+"type": "error",
+"description": "Invalid or expired token"
+}
+
+Endpoint: /IAuthService/ValidateToken
+Método HTTP: GET
+Formato Serializacion: JSON
+Cabecera entrada: Token de autentcacion
+Cabecera salida: -
+Estructura de datos IN:
+{
+"token": "abc123xyz"
+}
+Estructura de datos OUT:
+{
+"valid": true
+}
+Estructura de datos ERR:
+{
+"type": "error",
+"description": "Token validation failed"
+}

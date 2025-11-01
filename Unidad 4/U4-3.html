@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actividad 3 - WebComponent con Tabla</title>
+    <style>
+        .contenedor {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            gap: 15px;
+            margin-top: 40px;
+            width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #17a2b8;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #138496;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #f1f1f1;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .tabla-contenedor {
+            width: 100%;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <solicitud-tabla></solicitud-tabla>
+
+    <script>
+        class SolicitudTabla extends HTMLElement {
+            constructor() {
+                super();
+                this.attachShadow({ mode: 'open' });
+
+                this.shadowRoot.innerHTML = `
+          <div class="contenedor">
+            <h2>Actividad 3 - Solicitud con Tabla</h2>
+            <button id="btnSolicitud">Efectuar Solicitud</button>
+            <div class="tabla-contenedor">
+              <table id="tabla">
+                <thead>
+                  <tr>
+                    <th>User ID</th>
+                    <th>ID</th>
+                    <th>Título</th>
+                    <th>Cuerpo</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        `;
+            }
+
+            connectedCallback() {
+                const boton = this.shadowRoot.querySelector('#btnSolicitud');
+                const cuerpoTabla = this.shadowRoot.querySelector('tbody');
+
+                boton.addEventListener('click', async () => {
+                    boton.disabled = true;
+                    boton.textContent = 'Cargando...';
+
+                    try {
+                        const respuesta = await fetch('https://jsonplaceholder.typicode.com/posts');
+                        if (!respuesta.ok) throw new Error(`Error HTTP: ${respuesta.status}`);
+
+                        const datos = await respuesta.json();
+
+                        // Limpiar cuerpo de tabla antes de agregar
+                        cuerpoTabla.innerHTML = '';
+
+                        // Crear filas
+                        datos.forEach(post => {
+                            const fila = document.createElement('tr');
+
+                            const userId = document.createElement('td');
+                            userId.textContent = post.userId;
+
+                            const id = document.createElement('td');
+                            id.textContent = post.id;
+
+                            const title = document.createElement('td');
+                            title.textContent = post.title;
+
+                            const body = document.createElement('td');
+                            body.textContent = post.body;
+
+                            fila.appendChild(userId);
+                            fila.appendChild(id);
+                            fila.appendChild(title);
+                            fila.appendChild(body);
+                            cuerpoTabla.appendChild(fila);
+                        });
+
+                    } catch (error) {
+                        cuerpoTabla.innerHTML = `<tr><td colspan="4">Ocurrió un error: ${error.message}</td></tr>`;
+                    } finally {
+                        boton.disabled = false;
+                        boton.textContent = 'Efectuar Solicitud';
+                    }
+                });
+            }
+        }
+
+        customElements.define('solicitud-tabla', SolicitudTabla);
+    </script>
+
+</body>
+
+</html>
