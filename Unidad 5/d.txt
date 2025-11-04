@@ -1,91 +1,105 @@
-D
-ListFiles
+================================================================================
+CASO D: File Storage
+================================================================================
+
 Endpoint: /IFileStorage/ListFiles
-Formato: JSON
+Método HTTP: GET
+Formato Serialización: JSON
 Cabecera entrada: -
 Cabecera salida: -
-Método HTTP: GET
-Estructura IN:
+Estructura de datos IN:
 {
-  "directory": "/home/user/files"
+  "directory": "/documents"
 }
-Estructura OUT:
+Estructura de datos OUT:
 [
-  "invoice.pdf",
-  "todo.txt",
-  "photo.jpg"
+  {
+    "filename": "documento1.pdf",
+    "path": "/documents/documento1.pdf",
+    "size": 2048000,
+    "createdAt": "2024-10-31T10:30:00Z"
+  },
+  {
+    "filename": "imagen1.jpg",
+    "path": "/documents/imagen1.jpg",
+    "size": 1024000,
+    "createdAt": "2024-10-30T15:45:00Z"
+  }
 ]
 Estructura de datos ERR:
 {
-  "type": "error",
-  "description": "No se encontró el directorio: /home/user/files"
+  "type": "FileNotFoundError",
+  "description": "Archivo no encontrado: /documents"
 }
 
+---
 
-
-ReadFile
 Endpoint: /IFileStorage/ReadFile
-Formato: JSON
-Cabecera entrada: -
-Cabecera salida: -
 Método HTTP: GET
-Estructura IN:
+Formato Serialización: JSON
+Cabecera entrada: -
+Cabecera salida: Content-Type: application/octet-stream
+Estructura de datos IN:
 {
-  "path": "/home/user/files/todo.txt"
+  "path": "/documents/documento1.pdf"
 }
-Estructura OUT:
+Estructura de datos OUT:
 {
-  "content": "Contenido de ejemplo del archivo solicitado."
+  "filename": "documento1.pdf",
+  "content": "base64_encoded_content_here",
+  "size": 2048000,
+  "mimeType": "application/pdf"
 }
 Estructura de datos ERR:
 {
-  "type": "error",
-  "description": "Permiso denegado para leer: /home/user/files/todo.txt"
+  "type": "FileNotFoundError",
+  "description": "Archivo no encontrado: /documents/documento1.pdf"
 }
 
+---
 
-
-WriteFile
 Endpoint: /IFileStorage/WriteFile
-Formato: JSON
-Cabecera entrada: -
+Método HTTP: POST
+Formato Serialización: JSON
+Cabecera entrada: Content-Type: application/json
 Cabecera salida: -
-Método HTTP: PUT
-Estructura IN:
+Estructura de datos IN:
 {
-  "path": "/home/user/files/new_document.txt",
-  "content": "Texto de ejemplo para crear un nuevo archivo."
+  "path": "/documents/nuevoarchivo.txt",
+  "content": "Contenido del archivo de texto"
 }
-Estructura OUT:
+Estructura de datos OUT:
 {
-  "type": "success",
-  "description": "Archivo escrito correctamente."
+  "filename": "nuevoarchivo.txt",
+  "path": "/documents/nuevoarchivo.txt",
+  "status": "guardado",
+  "size": 512
 }
 Estructura de datos ERR:
 {
-  "type": "error",
-  "description": "No se pudo escribir en: /home/user/files/new_document.txt"
+  "type": "PermissionDeniedError",
+  "description": "Permiso denegado para: /documents"
 }
 
+---
 
-
-DeleteFile
 Endpoint: /IFileStorage/DeleteFile
-Formato: JSON
+Método HTTP: DELETE
+Formato Serialización: JSON
 Cabecera entrada: -
 Cabecera salida: -
-Método HTTP: DELETE
-Estructura IN:
+Estructura de datos IN:
 {
-  "path": "/home/user/files/invoice.pdf"
+  "path": "/documents/nuevoarchivo.txt"
 }
-Estructura OUT:
+Estructura de datos OUT:
 {
-  "type": "success",
-  "description": "Archivo eliminado exitosamente."
+  "filename": "nuevoarchivo.txt",
+  "path": "/documents/nuevoarchivo.txt",
+  "status": "eliminado"
 }
 Estructura de datos ERR:
 {
-  "type": "error",
-  "description": "Archivo no encontrado: /home/user/files/invoice.pdf"
+  "type": "FileNotFoundError",
+  "description": "Archivo no encontrado: /documents/nuevoarchivo.txt"
 }

@@ -1,76 +1,82 @@
-C
-TrackEvent
+================================================================================
+CASO C: Analytics Service
+================================================================================
+
 Endpoint: /IAnalyticsService/TrackEvent
-Formato: JSON
-Cabecera entrada: -
-Cabecera salida: -
 Método HTTP: POST
-Estructura IN:
+Formato Serialización: JSON
+Cabecera entrada: Content-Type: application/json
+Cabecera salida: -
+Estructura de datos IN:
 {
-  "eventName": "UserSignIn",
+  "eventName": "user_login",
   "properties": {
-    "userId": "456",
-    "device": "desktop",
-    "region": "Argentina"
+    "userId": "123",
+    "timestamp": "2024-10-31T10:30:00Z"
   }
 }
-Estructura OUT:
+Estructura de datos OUT:
 {
-  "status": true
+  "eventId": "evt_12345",
+  "eventName": "user_login",
+  "status": "registrado"
 }
 Estructura de datos ERR:
 {
   "type": "error",
-  "description": "No se pudo registrar el evento."
+  "description": "Error al registrar el evento"
 }
 
+---
 
-
-GetEventCount
 Endpoint: /IAnalyticsService/GetEventCount
-Formato: JSON
+Método HTTP: GET
+Formato Serialización: JSON
 Cabecera entrada: -
 Cabecera salida: -
-Método HTTP: GET
-Estructura IN:
+Estructura de datos IN:
 {
-  "eventName": "UserSignIn"
+  "eventName": "user_login"
 }
-Estructura OUT:
+Estructura de datos OUT:
 {
-  "eventName": "UserSignIn",
-  "count": 275
+  "eventName": "user_login",
+  "count": 2547
 }
 Estructura de datos ERR:
 {
   "type": "error",
-  "description": "Evento no encontrado."
+  "description": "Evento no encontrado"
 }
 
+---
 
-
-GetTopEvents
 Endpoint: /IAnalyticsService/GetTopEvents
-Formato: JSON
+Método HTTP: GET
+Formato Serialización: JSON
 Cabecera entrada: -
 Cabecera salida: -
-Método HTTP: GET
-Estructura IN:
+Estructura de datos IN:
 {
   "limit": 5
 }
-Estructura OUT:
-{
-  "topEvents": {
-    "UserSignIn": 275,
-    "AddToCart": 195,
-    "Checkout": 140,
-    "Logout": 85,
-    "ViewItem": 70
+Estructura de datos OUT:
+[
+  {
+    "eventName": "user_login",
+    "count": 5420
+  },
+  {
+    "eventName": "page_view",
+    "count": 8901
+  },
+  {
+    "eventName": "purchase_completed",
+    "count": 1234
   }
-}
+]
 Estructura de datos ERR:
 {
   "type": "error",
-  "description": "No se encontraron eventos registrados."
+  "description": "Parámetro de límite inválido"
 }

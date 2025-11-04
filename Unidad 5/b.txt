@@ -1,72 +1,78 @@
-B
-SearchProducts
+================================================================================
+CASO B: Product Catalog
+================================================================================
 
 Endpoint: /IProductCatalog/SearchProducts
-Formato: JSON
+Método HTTP: GET
+Formato Serialización: JSON
 Cabecera entrada: -
 Cabecera salida: -
-Método HTTP: GET
-Estructura IN:
+Estructura de datos IN:
 {
-"keyword": "product sample"
+  "keyword": "laptop"
 }
-Estructura OUT:
-{
-"id": 12,
-"name": "Sample Item",
-"price": "120.50"
-}
+Estructura de datos OUT:
+[
+  {
+    "id": 1,
+    "name": "Laptop Dell XPS",
+    "price": 1299.99
+  },
+  {
+    "id": 2,
+    "name": "Laptop HP Pavilion",
+    "price": 699.99
+  }
+]
 Estructura de datos ERR:
 {
-"type": "error",
-"description": "No se encontraron resultados para la búsqueda."
+  "type": "error",
+  "description": "No se encontraron productos con ese criterio"
 }
 
-
-
-GetProductById
+---
 
 Endpoint: /IProductCatalog/GetProductById
-Formato: JSON
+Método HTTP: GET
+Formato Serialización: JSON
 Cabecera entrada: -
 Cabecera salida: -
-Método HTTP: GET
-Estructura IN:
+Estructura de datos IN:
 {
-"id": 4
+  "id": 1
 }
-Estructura OUT:
+Estructura de datos OUT:
 {
-"id": 4,
-"name": "Sample Product",
-"price": "99.90"
+  "id": 1,
+  "name": "Laptop Dell XPS",
+  "price": 1299.99
 }
 Estructura de datos ERR:
 {
-"type": "error",
-"description": "Producto no encontrado."
+  "type": "error",
+  "description": "Producto no encontrado"
 }
 
-
-
-UpdateStock
+---
 
 Endpoint: /IProductCatalog/UpdateStock
-Formato: JSON
-Cabecera entrada: -
+Método HTTP: PATCH
+Formato Serialización: JSON
+Cabecera entrada: Content-Type: application/json
 Cabecera salida: -
-Método HTTP: PUT
-Estructura IN:
+Estructura de datos IN:
 {
-"productId": 4,
-"newStock": 25
+  "productId": 1,
+  "newStock": 50
 }
-Estructura OUT:
+Estructura de datos OUT:
 {
-"status": true
+  "id": 1,
+  "name": "Laptop Dell XPS",
+  "stock": 50
 }
 Estructura de datos ERR:
 {
-"type": "error",
-"description": "No fue posible actualizar el stock del producto."
+  "type": "error",
+  "description": "Stock no puede ser negativo"
 }

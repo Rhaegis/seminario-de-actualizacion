@@ -1,4 +1,7 @@
-A
+================================================================================
+CASO A: User Service
+================================================================================
+
 Endpoint: /IUserService/GetAllUsers
 Método HTTP: GET
 Formato Serialización: JSON
@@ -7,25 +10,24 @@ Cabecera salida: -
 Estructura de datos IN: -
 Estructura de datos OUT:
 [
-{
-"id": 1,
-"name": "John Doe",
-"email": "john.doe@example.com"
-},
-{
-"id": 2,
-"name": "Jane Smith",
-"email": "jane.smith@example.com"
-}
+  {
+    "id": 1,
+    "name": "Juan Pérez",
+    "email": "juan@example.com"
+  },
+  {
+    "id": 2,
+    "name": "María García",
+    "email": "maria@example.com"
+  }
 ]
-
 Estructura de datos ERR:
 {
-"type": "error",
-"description": "No fue posible obtener la lista de usuarios."
+  "type": "error",
+  "description": "No se pudo obtener la lista de usuarios"
 }
 
-
+---
 
 Endpoint: /IUserService/GetUserById
 Método HTTP: GET
@@ -34,16 +36,88 @@ Cabecera entrada: -
 Cabecera salida: -
 Estructura de datos IN:
 {
-"id": 5
+  "id": 1
 }
 Estructura de datos OUT:
 {
-"id": 5,
-"name": "María González",
-"email": "maria.gonzalez@example.com"
+  "id": 1,
+  "name": "Juan Pérez",
+  "email": "juan@example.com"
 }
 Estructura de datos ERR:
 {
-"type": "error",
-"description": "El usuario solicitado no existe."
+  "type": "error",
+  "description": "Usuario no encontrado"
 }
+
+---
+
+Endpoint: /IUserService/CreateUser
+Método HTTP: POST
+Formato Serialización: JSON
+Cabecera entrada: Content-Type: application/json
+Cabecera salida: -
+Estructura de datos IN:
+{
+  "name": "Carlos López",
+  "email": "carlos@example.com"
+}
+Estructura de datos OUT:
+{
+  "id": 3,
+  "name": "Carlos López",
+  "email": "carlos@example.com"
+}
+Estructura de datos ERR:
+{
+  "type": "error",
+  "description": "El email ya existe en el sistema"
+}
+
+---
+
+Endpoint: /IUserService/UpdateUser
+Método HTTP: PUT
+Formato Serialización: JSON
+Cabecera entrada: Content-Type: application/json
+Cabecera salida: -
+Estructura de datos IN:
+{
+  "id": 1,
+  "name": "Juan Pérez Actualizado",
+  "email": "juannuevo@example.com"
+}
+Estructura de datos OUT:
+{
+  "id": 1,
+  "name": "Juan Pérez Actualizado",
+  "email": "juannuevo@example.com"
+}
+Estructura de datos ERR:
+{
+  "type": "error",
+  "description": "Usuario no encontrado para actualizar"
+}
+
+---
+
+Endpoint: /IUserService/DeleteUser
+Método HTTP: DELETE
+Formato Serialización: JSON
+Cabecera entrada: -
+Cabecera salida: -
+Estructura de datos IN:
+{
+  "id": 1
+}
+Estructura de datos OUT:
+{
+  "id": 1,
+  "status": "eliminado"
+}
+Estructura de datos ERR:
+{
+  "type": "error",
+  "description": "No se pudo eliminar el usuario"
+}
+

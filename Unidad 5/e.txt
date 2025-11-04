@@ -1,58 +1,94 @@
-E
-Endpoint: /IAuthService/Login
-Método HTTP: Post
-Formato Serializacion: JSON
-Cabecera entrada: -
-Cabecera salida: Token
-Estructura de datos IN:
-{
-"user": "exampleUser",
-"password": "examplePass"
-}
-Estructura de datos OUT:
-{
-"token": "abc123xyz"
-}
-Estructura de datos ERR:
-{
-"type": "error",
-"description": "Invalid credentials"
-}
+================================================================================
+CASO E: Auth Service
+================================================================================
 
-Endpoint: /IAuthService/Logout
-Método HTTP: Post
-Formato Serializacion: JSON
-Cabecera entrada: Token de autentcacion
+Endpoint: /IAuthService/Login
+Método HTTP: POST
+Formato Serialización: JSON
+Cabecera entrada: Content-Type: application/json
 Cabecera salida: -
 Estructura de datos IN:
 {
-"token": "abc123xyz"
+  "user": "juan@example.com",
+  "password": "securepassword123"
 }
 Estructura de datos OUT:
 {
-"success": true
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": "juan@example.com",
+  "expiresIn": 3600,
+  "status": "autenticado"
 }
 Estructura de datos ERR:
 {
-"type": "error",
-"description": "Invalid or expired token"
+  "type": "error",
+  "description": "Usuario o contraseña incorrectos"
 }
+
+---
+
+Endpoint: /IAuthService/Logout
+Método HTTP: POST
+Formato Serialización: JSON
+Cabecera entrada: Authorization: Bearer token
+Cabecera salida: -
+Estructura de datos IN:
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+Estructura de datos OUT:
+{
+  "status": "desautenticado",
+  "message": "Sesión cerrada correctamente"
+}
+Estructura de datos ERR:
+{
+  "type": "AuthException",
+  "description": "Token inválido o expirado"
+}
+
+---
 
 Endpoint: /IAuthService/ValidateToken
 Método HTTP: GET
-Formato Serializacion: JSON
-Cabecera entrada: Token de autentcacion
+Formato Serialización: JSON
+Cabecera entrada: Authorization: Bearer token
 Cabecera salida: -
 Estructura de datos IN:
 {
-"token": "abc123xyz"
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 }
 Estructura de datos OUT:
 {
-"valid": true
+  "valid": true,
+  "user": "juan@example.com",
+  "expiresAt": "2024-10-31T14:30:00Z",
+  "status": "válido"
 }
 Estructura de datos ERR:
 {
-"type": "error",
-"description": "Token validation failed"
+  "type": "AuthException",
+  "description": "Token expirado"
+}
+
+---
+
+Endpoint: /IAuthService/HashPassword
+Método HTTP: POST
+Formato Serialización: JSON
+Cabecera entrada: Content-Type: application/json
+Cabecera salida: -
+Estructura de datos IN:
+{
+  "plainTextPassword": "micontraseña123"
+}
+Estructura de datos OUT:
+{
+  "hashedPassword": "$2b$12$R9h7cIPz0gi.URNNGHQ3.e3CyYx8wIZKXmJX9t8KmFVVbCHhNMqCK",
+  "status": "procesado"
+}
+Estructura de datos ERR:
+{
+  "type": "error",
+  "description": "Error al procesar la contraseña"
 }
